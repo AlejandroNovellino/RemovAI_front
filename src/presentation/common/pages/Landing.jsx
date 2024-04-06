@@ -24,7 +24,7 @@ function Landing() {
 						<Container fluid>
 							<Row>
 								<Col>
-									<p className="fs-1">Welcome to Janna!</p>
+									<p className="fs-1 hover-effect">Welcome to Janna!</p>
 								</Col>
 							</Row>
 							<Row>
