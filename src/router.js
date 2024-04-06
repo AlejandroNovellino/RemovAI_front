@@ -1,14 +1,14 @@
 // packages imports
 import { createBrowserRouter } from "react-router-dom";
-import App from "./presentation/common/pages/App";
 // Components and pages imports
 import ErrorInfo from "./presentation/common/pages/ErrorInfo";
+import Landing from "./presentation/common/pages/Landing";
 
 // router creation
 export const router = createBrowserRouter([
 	{
 		path: "/",
-		element: <App />,
+		element: <Landing />,
 		errorElement: <ErrorInfo />,
 	},
 ]);

@@ -3,6 +3,8 @@ import React from "react";
 import ReactDOM from "react-dom/client";
 import { RouterProvider } from "react-router-dom";
 // css styles imports
+import "bootstrap/dist/css/bootstrap.min.css";
+import "bootstrap-icons/bootstrap-icons.svg";
 import "./index.css";
 // elements imports
 import reportWebVitals from "./reportWebVitals";
