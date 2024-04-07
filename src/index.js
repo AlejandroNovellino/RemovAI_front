@@ -2,6 +2,7 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
 import { RouterProvider } from "react-router-dom";
+import { Provider } from "react-redux";
 // css styles imports
 import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap-icons/bootstrap-icons.svg";
@@ -9,11 +10,14 @@ import "./index.css";
 // elements imports
 import reportWebVitals from "./reportWebVitals";
 import { router } from "./router";
+import { store } from "./application/state/store";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
 	<React.StrictMode>
-		<RouterProvider router={router} />
+		<Provider store={store}>
+			<RouterProvider router={router} />
+		</Provider>
 	</React.StrictMode>
 );
 
