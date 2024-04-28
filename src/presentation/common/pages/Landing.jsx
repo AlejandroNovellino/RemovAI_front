@@ -35,6 +35,13 @@ function Landing() {
 			<br></br>
 			<br></br>
 			<br></br>
+			<div className="m-0 p-0">
+				<div class="cube"></div>
+				<div class="cube"></div>
+				<div class="cube"></div>
+				<div class="cube"></div>
+				<div class="cube"></div>
+			</div>
 
 			<Container className="mt-5">
 				<Row>
