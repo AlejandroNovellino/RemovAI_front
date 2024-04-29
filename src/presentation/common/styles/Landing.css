@@ -1,8 +1,3 @@
-.landing_background {
-	background-image: url("./../images/landing_background.jfif");
-	background-color: #1c2bad;
-}
-
 .form-control:focus {
 	border-color: rgba(99, 102, 241, 0.5);
 	box-shadow: 0 0 0 0.1rem rgba(99, 102, 241, 0.5);

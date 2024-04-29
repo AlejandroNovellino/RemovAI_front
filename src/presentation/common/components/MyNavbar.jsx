@@ -18,6 +18,9 @@ function MyNavbar() {
 							className="d-inline-block align-top"
 						/>
 					</Navbar.Brand>
+					<Navbar.Collapse className="justify-content-end">
+						<Navbar.Text>Signed in as: {}</Navbar.Text>
+					</Navbar.Collapse>
 				</Container>
 			</Navbar>
 			<br></br>

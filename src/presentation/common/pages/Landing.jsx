@@ -5,15 +5,21 @@ import Col from "react-bootstrap/Col";
 import Button from "react-bootstrap/Button";
 import Card from "react-bootstrap/Card";
 import Form from "react-bootstrap/Form";
-// other packages imports
-import { useForm, SubmitHandler } from "react-hook-form";
+// user form
+import { useForm } from "react-hook-form";
+// react router
+import { useNavigate } from "react-router-dom";
 // import styles
 import "../styles/Landing.css";
 // import custom components
 import MyNavbar from "../components/MyNavbar";
 import { strongPasswordRegex } from "../utils/regex";
+// redux exports
+import { useLoginMutation } from "../../../application/api/apiSlice";
+import { useSignInMutation } from "../../../application/api/apiSlice";
 
 function Landing() {
+	// form hook
 	const {
 		register,
 		handleSubmit,
@@ -25,9 +31,44 @@ function Landing() {
 			password: "",
 		},
 	});
+	// redux login hook
+	const [login, { isLoadingLogin }] = useLoginMutation();
+	// redux sign-in hook
+	const [signIn, { isLoadingSignIn }] = useSignInMutation();
+	// react router
+	const navigate = useNavigate();
 
+	// user inputs
 	const email = watch("email");
 	const password = watch("password");
+
+	// login helper, onsubmit function
+	const onSubmitLogin = async () => {
+		if (!isLoadingLogin) {
+			try {
+				// use the kook to login
+				await login({ email: email, password: password }).unwrap();
+			} catch (err) {
+				// print the error
+				console.error("Could not login: ", err);
+			}
+		}
+	};
+
+	// login helper, onsubmit function
+	const onSubmitSignIn = async () => {
+		if (!isLoadingSignIn) {
+			try {
+				// use the kook to login
+				await signIn({ email: email, password: password }).unwrap();
+				// sig-in possible so go to home
+				navigate("/welcome");
+			} catch (err) {
+				// print the error
+				console.error("Could not login: ", err);
+			}
+		}
+	};
 
 	return (
 		<>
@@ -36,11 +77,11 @@ function Landing() {
 			<br></br>
 			<br></br>
 			<div className="m-0 p-0">
-				<div class="cube"></div>
-				<div class="cube"></div>
-				<div class="cube"></div>
-				<div class="cube"></div>
-				<div class="cube"></div>
+				<div className="cube"></div>
+				<div className="cube"></div>
+				<div className="cube"></div>
+				<div className="cube"></div>
+				<div className="cube"></div>
 			</div>
 
 			<Container className="mt-5">
@@ -92,10 +133,7 @@ function Landing() {
 								</div>
 								<hr></hr>
 								<Container>
-									<Form
-										onSubmit={handleSubmit(data => {
-											console.log(data);
-										})}>
+									<Form onSubmit={handleSubmit(onSubmitSignIn)}>
 										<Form.Group className="mb-3" controlId="formBasicEmail">
 											<Form.Label className="fs-5 fw-light">
 												Email address
