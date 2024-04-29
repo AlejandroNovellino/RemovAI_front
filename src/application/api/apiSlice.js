@@ -1,46 +1,53 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
-import { store } from "../state/store";
 
 // Define a service using a base URL and expected endpoints
 export const apiSlice = createApi({
 	reducerPath: "api",
-	baseQuery: fetchBaseQuery({ baseUrl: "https://dummyjson.com/" }),
-	prepareHeaders: (headers, { getState }) => {
-		// By default, if we have a token in the store, let's use that for authenticated requests
-		const token = store.auth.token;
-		if (token) {
-			headers.set("authorization", `Bearer ${token}`);
-		}
-		return headers;
-	},
-	endpoints: build => ({
+	baseQuery: fetchBaseQuery({
+		baseUrl: "https://662e73e9a7dda1fa378d0185.mockapi.io/api/v1/",
+	}),
+
+	endpoints: builder => ({
 		// all endpoints can go here or use the injectEndpoints()
 		// see documentation for that
 		// build.query() for get data
 		// builder.mutation() sends updates to the server
 		// -- get user query
-		getUsers: build.mutation({
+		getUsers: builder.mutation({
 			query: () => `/users`,
 		}),
 		// -- login user mutation
-		login: build.mutation({
+		login: builder.mutation({
 			query: credentials => ({
-				url: ``,
+				url: `/login`,
 				method: "POST",
 				body: credentials,
 			}),
 		}),
-		// -- login user mutation
-		signIn: build.mutation({
+		// -- sign-in user mutation
+		signIn: builder.mutation({
 			query: credentials => ({
-				url: ``,
+				url: `/login`,
 				method: "POST",
 				body: credentials,
 			}),
 		}),
 		// other endpoints
+		// -- get welcome movies
+		getWelcomeMovies: builder.query({
+			query: _ => "/movies",
+		}),
+		// -- get movies
+		getRecommendedMovies: builder.query({
+			query: _ => "/movies",
+		}),
 	}),
 });
 
-export const { useGetUsersQuery, useLoginMutation, useSignInMutation } =
-	apiSlice;
+export const {
+	useGetUsersQuery,
+	useLoginMutation,
+	useSignInMutation,
+	useGetWelcomeMoviesQuery,
+	useGetRecommendedMoviesQuery,
+} = apiSlice;
