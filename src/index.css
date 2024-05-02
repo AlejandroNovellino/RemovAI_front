@@ -50,8 +50,8 @@ code {
 }
 .cube:nth-child(5) {
 	animation-delay: 8s;
-	left: 10vw;
-	top: 85vh;
+	left: 20vw;
+	top: 80vh;
 }
 .cube:nth-child(6) {
 	animation-delay: 10s;
