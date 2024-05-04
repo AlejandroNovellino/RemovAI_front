@@ -16,7 +16,6 @@ import MyNavbar from "../components/MyNavbar";
 import { strongPasswordRegex } from "../utils/regex";
 // redux exports
 import { useLoginMutation } from "../../../application/api/apiSlice";
-import { useSignInMutation } from "../../../application/api/apiSlice";
 
 function Landing() {
 	// form hook
@@ -33,8 +32,6 @@ function Landing() {
 	});
 	// redux login hook
 	const [login, { isLoadingLogin }] = useLoginMutation();
-	// redux sign-in hook
-	const [signIn, { isLoadingSignIn }] = useSignInMutation();
 	// react router
 	const navigate = useNavigate();
 
@@ -47,22 +44,12 @@ function Landing() {
 		if (!isLoadingLogin) {
 			try {
 				// use the kook to login
-				await login({ email: email, password: password }).unwrap();
-			} catch (err) {
-				// print the error
-				console.error("Could not login: ", err);
-			}
-		}
-	};
-
-	// login helper, onsubmit function
-	const onSubmitSignIn = async () => {
-		if (!isLoadingSignIn) {
-			try {
-				// use the kook to login
-				await signIn({ email: email, password: password }).unwrap();
-				// sig-in possible so go to home
-				navigate("/welcome");
+				await login({
+					email: email,
+					password: password,
+				}).unwrap();
+				// login possible so go to home
+				navigate("/home");
 			} catch (err) {
 				// print the error
 				console.error("Could not login: ", err);
@@ -73,9 +60,7 @@ function Landing() {
 	return (
 		<>
 			<MyNavbar />
-			<br></br>
-			<br></br>
-			<br></br>
+			<br />
 			<div className="m-0 p-0">
 				<div className="cube"></div>
 				<div className="cube"></div>
@@ -83,8 +68,7 @@ function Landing() {
 				<div className="cube"></div>
 				<div className="cube"></div>
 			</div>
-
-			<Container className="mt-5">
+			<Container className="">
 				<Row>
 					<Col xs={6} className="pe-5 me-2">
 						<Container fluid>
@@ -104,7 +88,11 @@ function Landing() {
 							<Row>
 								<Col>
 									<div className="d-grid gap-2">
-										<Button variant="light">{" Start for free"}</Button>
+										<Button
+											variant="light"
+											onClick={() => navigate("/sign-in")}>
+											{" Start for free"}
+										</Button>
 									</div>
 								</Col>
 							</Row>
@@ -123,7 +111,7 @@ function Landing() {
 						<Card className="tw-backdrop-blur-sm tw-bg-gray-400/5 tw-shadow-md tw-shadow-indigo-500/50">
 							<Card.Body>
 								<Card.Title className="text-center">
-									Create your free account
+									Login into your account
 								</Card.Title>
 								<div className="d-grid gap-2 my-3">
 									<Button variant="outline-light">
@@ -133,7 +121,7 @@ function Landing() {
 								</div>
 								<hr></hr>
 								<Container>
-									<Form onSubmit={handleSubmit(onSubmitSignIn)}>
+									<Form onSubmit={handleSubmit(onSubmitLogin)}>
 										<Form.Group className="mb-3" controlId="formBasicEmail">
 											<Form.Label className="fs-5 fw-light">
 												Email address
@@ -186,7 +174,7 @@ function Landing() {
 										</Form.Group>
 										<div className="d-grid gap-2 my-3 ">
 											<Button type="submit" variant="light">
-												{" Start for free"}
+												{"Login"}
 											</Button>
 										</div>
 									</Form>
