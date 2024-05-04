@@ -16,6 +16,7 @@ import "../styles/Landing.css";
 import MyNavbar from "../components/MyNavbar";
 // redux exports
 import { useGetWelcomeMoviesQuery } from "../../../application/api/apiSlice";
+import { useLikeMoviesMutation } from "../../../application/api/apiSlice";
 
 function Welcome() {
 	// redux welcome movies
@@ -26,6 +27,7 @@ function Welcome() {
 		isError,
 		error,
 	} = useGetWelcomeMoviesQuery();
+	const [likeMovies, { isLoadingLikeMovies }] = useLikeMoviesMutation();
 	// react router
 	const navigate = useNavigate();
 	// use effect
@@ -33,11 +35,11 @@ function Welcome() {
 
 	// login helper, onsubmit function
 	const handleConfirmSelection = async () => {
-		if (!isLoading) {
+		if (!isLoadingLikeMovies) {
 			try {
 				// use the kook to register user selection, user liked movies
-				//
-				// sig-in possible so go to home
+				likeMovies(likedMovies).unwrap();
+				// movies liked possible so go to home
 				navigate("/home");
 			} catch (err) {
 				// print the error
@@ -52,7 +54,9 @@ function Welcome() {
 
 	const dislikeMovie = dislikedMovie => {
 		setLikedMovies([
-			...likedMovies.filter(movie => movie.id !== dislikedMovie.id),
+			...likedMovies.filter(
+				movie => movie.id_pelicula !== dislikedMovie.id_pelicula
+			),
 		]);
 	};
 
@@ -63,7 +67,7 @@ function Welcome() {
 		content = <Spinner animation="grow" variant="light" />;
 	} else if (isSuccess) {
 		content = welcomeMovies.map(movie => (
-			<Col key={movie.id}>
+			<Col key={movie.id_pelicula}>
 				<WelcomeMovieCard
 					movie={movie}
 					likedMovies={likedMovies}

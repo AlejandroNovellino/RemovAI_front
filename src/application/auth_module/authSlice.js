@@ -3,8 +3,9 @@ import { apiSlice } from "../api/apiSlice";
 
 const initialState = {
 	token: null,
-	username: "",
+	id: "",
 	email: "",
+	username: "",
 };
 
 const authSlice = createSlice({
@@ -16,17 +17,23 @@ const authSlice = createSlice({
 			.addMatcher(
 				apiSlice.endpoints.login.matchFulfilled,
 				(state, { payload }) => {
-					state.token = payload.token;
-					state.username = payload.username;
-					state.email = payload.email;
+					console.log(`🚀 ~ payload:`, payload);
+					let result = payload.result;
+					state.token = result.token;
+					state.id = result.usuario.id;
+					state.email = result.usuario.email;
+					state.username = result.usuario.userName;
 				}
 			)
 			.addMatcher(
 				apiSlice.endpoints.signIn.matchFulfilled,
 				(state, { payload }) => {
-					state.token = payload.token;
-					state.username = payload.username;
-					state.email = payload.email;
+					console.log(`🚀 ~ payload:`, payload);
+					let result = payload.result;
+					state.token = result.token;
+					state.id = result.usuario.id;
+					state.email = result.usuario.email;
+					state.username = result.usuario.userName;
 				}
 			);
 	},

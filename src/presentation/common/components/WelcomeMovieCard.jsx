@@ -7,7 +7,7 @@ function WelcomeMovieCard({ movie, likedMovies, likeMovie, dislikeMovie }) {
 
 	if (
 		likedMovies &&
-		likedMovies.some(likedMovie => likedMovie.id === movie.id)
+		likedMovies.some(likedMovie => likedMovie.id_pelicula === movie.id_pelicula)
 	) {
 		liked = true;
 	}
@@ -23,9 +23,9 @@ function WelcomeMovieCard({ movie, likedMovies, likeMovie, dislikeMovie }) {
 	return (
 		<>
 			<Card bg="dark" className="text-center">
-				<Card.Img src={movie.image} alt="Card image" />
+				<Card.Img src={`${movie.cartel_path}`} alt="Card image" />
 				<Card.ImgOverlay>
-					<Card.Title>{movie.name}</Card.Title>
+					<Card.Title>{movie.titulo_original}</Card.Title>
 					<Card.Text>{liked}</Card.Text>
 					<Button variant={liked ? "dark" : "light"} onClick={handleLike}>
 						{liked ? "Dislike" : "Like"}
