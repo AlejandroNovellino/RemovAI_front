@@ -58,7 +58,7 @@ function Landing() {
 	};
 
 	return (
-		<>
+		<Container className="vh-100">
 			<MyNavbar />
 			<br />
 			<div className="m-0 p-0">
@@ -68,7 +68,7 @@ function Landing() {
 				<div className="cube"></div>
 				<div className="cube"></div>
 			</div>
-			<Container className="">
+			<Container>
 				<Row>
 					<Col xs={6} className="pe-5 me-2">
 						<Container fluid>
@@ -184,7 +184,7 @@ function Landing() {
 					</Col>
 				</Row>
 			</Container>
-		</>
+		</Container>
 	);
 }
 
