@@ -28,10 +28,12 @@ function HomeMovieCard({ movie, likedMovies, likeMovie, dislikeMovie }) {
 					alt="Card image"
 				/>
 				<Card.ImgOverlay>
-					<Card.Title>{movie.titulo_original}</Card.Title>
-					<Card.Text>{liked}</Card.Text>
-					<Button variant={liked ? "dark" : "light"} onClick={handleLike}>
-						{liked ? "Dislike" : "Like"}
+					<Button variant="dark" onClick={handleLike}>
+						{liked ? (
+							<i className="bi bi-hand-thumbs-up-fill tw-text-purple-200"></i>
+						) : (
+							<i className="bi bi-hand-thumbs-up"></i>
+						)}
 					</Button>
 				</Card.ImgOverlay>
 			</Card>
