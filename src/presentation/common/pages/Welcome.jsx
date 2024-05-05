@@ -38,7 +38,7 @@ function Welcome() {
 		if (!isLoadingLikeMovies) {
 			try {
 				// use the kook to register user selection, user liked movies
-				likeMovies(likedMovies).unwrap();
+				await likeMovies(likedMovies).unwrap();
 				// movies liked possible so go to home
 				navigate("/home");
 			} catch (err) {

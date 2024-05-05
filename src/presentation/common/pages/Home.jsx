@@ -8,6 +8,7 @@ import Button from "react-bootstrap/Button";
 import Spinner from "react-bootstrap/Spinner";
 // components
 import HomeMovieCard from "../components/HomeMovieCard";
+import MovieInfoModal from "../components/MovieInfoModal";
 // react router
 
 // import styles
@@ -36,15 +37,34 @@ function Home() {
 	const [likeMovies /*{ isLoadingLikeMovies }*/] = useLikeMoviesMutation();
 	// use state
 	const [likedMovies, setLikedMovies] = useState([]);
+	const [movieToShowInfo, setMovieToShowInfo] = useState(null);
+	const [show, setShow] = useState(false);
+
+	const handleClose = () => setShow(false);
+	const handleShow = () => setShow(true);
+
+	const handleMovieSelection = movie => {
+		// set the movie to show info
+		setMovieToShowInfo(movie);
+		// show the modal
+		handleShow();
+	};
+
+	const handleMovieDeselection = movie => {
+		// set the movie to show info
+		setMovieToShowInfo(null);
+		// show the modal
+		handleClose();
+	};
 
 	// login helper, onsubmit function
 	const handleUserLikes = async () => {
 		if (!isLoading) {
 			try {
 				// use the kook to register the user selection
-				likeMovies(likedMovies).unwrap();
+				await likeMovies(likedMovies).unwrap();
 				// now refetch the data to show
-				refetch();
+				await refetch().unwrap();
 				// empty the liked movies
 				setLikedMovies([]);
 			} catch (err) {
@@ -106,6 +126,7 @@ function Home() {
 													likedMovies={likedMovies}
 													likeMovie={likeMovie}
 													dislikeMovie={dislikeMovie}
+													handleMovieSelection={handleMovieSelection}
 												/>
 											</Col>
 										</>
@@ -132,6 +153,14 @@ function Home() {
 	return (
 		<Container className={parentContainerStyle}>
 			<MyNavbar />
+
+			{movieToShowInfo && (
+				<MovieInfoModal
+					movie={movieToShowInfo}
+					show={show}
+					handleClose={handleMovieDeselection}
+				/>
+			)}
 
 			<Container className="">
 				<Row className="my-5">
