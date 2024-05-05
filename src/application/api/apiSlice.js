@@ -30,6 +30,9 @@ export const apiSlice = createApi({
 				url: `usuarios/registro`,
 				method: "POST",
 				body: credentials,
+				headers: {
+					"Access-Control-Allow-Origin": "https://localhost:3000",
+				},
 			}),
 		}),
 		// other endpoints
@@ -54,18 +57,36 @@ export const apiSlice = createApi({
 		}),
 		// -- get movies
 		getRecommendedMovies: builder.query({
-			query: _ => "/movies",
+			queryFn: (likedMovies, api, extraOptions, baseQuery) => {
+				// get the store to get the user token
+				const state = api.getState();
+				const token = state.auth.token;
+				// return the base query
+				return baseQuery({
+					url: `/RecomendIA/Recomiendame`,
+					method: "GET",
+					headers: {
+						Authorization: `Bearer ${token}`,
+						"Access-Control-Allow-Origin": "https://localhost:3000",
+					},
+				});
+			},
 		}),
 		// -- like movies
 		likeMovies: builder.mutation({
 			queryFn: (likedMovies, api, extraOptions, baseQuery) => {
-				// get the store to get the user id
+				// get the store to get the user id and token
 				const state = api.getState();
 				const userId = state.auth.id;
+				const token = state.auth.token;
 				// return the base query
 				return baseQuery({
 					url: `/Likes`,
 					method: "POST",
+					headers: {
+						Authorization: `Bearer ${token}`,
+						"Access-Control-Allow-Origin": "https://localhost:3000",
+					},
 					body: likedMovies.map(likedMovie => {
 						return {
 							id_usuario: userId,

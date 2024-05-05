@@ -7,7 +7,7 @@ import Col from "react-bootstrap/Col";
 import Button from "react-bootstrap/Button";
 import Spinner from "react-bootstrap/Spinner";
 // components
-import MovieCard from "../components/MovieCard";
+import HomeMovieCard from "../components/HomeMovieCard";
 // react router
 
 // import styles
@@ -15,28 +15,37 @@ import "../styles/Landing.css";
 // import custom components
 import MyNavbar from "../components/MyNavbar";
 // redux exports
-import { useGetRecommendedMoviesQuery } from "../../../application/api/apiSlice";
+import {
+	useGetRecommendedMoviesQuery,
+	useLikeMoviesMutation,
+} from "../../../application/api/apiSlice";
 
 function Home() {
 	// redux welcome movies
 	const {
-		data: movies,
+		data: recommendedMovies,
 		isLoading,
 		isSuccess,
 		isError,
 		error,
+		refetch,
 	} = useGetRecommendedMoviesQuery();
-	// use effect
-	const [currentMovie, setCurrentMovie] = useState(0);
+	console.log(`🚀 ~ Home ~ recommendedMovies:`, recommendedMovies);
+
+	// redux save likes
+	const [likeMovies /*{ isLoadingLikeMovies }*/] = useLikeMoviesMutation();
+	// use state
+	const [likedMovies, setLikedMovies] = useState([]);
 
 	// login helper, onsubmit function
-	const handleUserSelection = async () => {
+	const handleUserLikes = async () => {
 		if (!isLoading) {
 			try {
 				// use the kook to register the user selection
-				//
-				// sig-in possible so go to home
-				setCurrentMovie(currentMovie + 1);
+				likeMovies(likedMovies).unwrap();
+				// now refetch the data to show
+				refetch();
+				// had to do something for redoing the redux hook
 			} catch (err) {
 				// print the error
 				console.error("Could not register selection ", err);
@@ -44,65 +53,122 @@ function Home() {
 		}
 	};
 
+	const likeMovie = likedMovie => {
+		setLikedMovies([...likedMovies, likedMovie]);
+		console.log(`🚀 ~ Home ~ likedMovies:`, likedMovies);
+	};
+
+	const dislikeMovie = dislikedMovie => {
+		setLikedMovies([
+			...likedMovies.filter(
+				movie => movie.id_Pelicula !== dislikedMovie.id_Pelicula
+			),
+		]);
+		console.log(`🚀 ~ Home ~ likedMovies:`, likedMovies);
+	};
+
 	// content to display
 	let content;
 
 	if (isLoading) {
-		content = <Spinner animation="grow" variant="light" />;
+		content = (
+			<>
+				<Row className="justify-content-md-center">
+					<Col xs={1}>
+						<p className="h2 text-center">{`Loading`}</p>
+					</Col>
+					<Col xs={1}></Col>
+					<Col xs={1}>
+						<Spinner animation="grow" variant="light" />
+					</Col>
+				</Row>
+			</>
+		);
 	} else if (isSuccess) {
-		content = <MovieCard movie={movies[currentMovie]} />;
+		content = (
+			<>
+				{recommendedMovies.map((element, index) => {
+					return (
+						<>
+							<Row key={element.peliculaDeReferencia}>
+								<p className="h2 text-center mb-3">
+									{`Because you like: ${element.peliculaDeReferencia}`}
+								</p>
+							</Row>
+							<Row className="justify-content-md-center mb-5">
+								{element.peliculas.map((movie, index) => {
+									return (
+										<>
+											<Col xs={2} key={movie.id_Pelicula}>
+												<HomeMovieCard
+													movie={movie}
+													likedMovies={likedMovies}
+													likeMovie={likeMovie}
+													dislikeMovie={dislikeMovie}
+												/>
+											</Col>
+										</>
+									);
+								})}
+							</Row>
+						</>
+					);
+				})}
+			</>
+		);
 	} else if (isError) {
-		content = <div>{error.toString()}</div>;
+		content = (
+			<div>
+				<p className="h2 text-center">
+					{`Oops! An error ocurred UwU ${error.toString()}`}
+				</p>
+			</div>
+		);
 	}
 
-	let aux = (
-		<Row className="justify-content-md-center">
-			<Col xs={1}>
-				<Button variant="dark" onClick={handleUserSelection}>
-					<i className="bi bi-google"></i>
-					{" Google"}
-				</Button>
-			</Col>
-			<Col xs={10}>{content}</Col>
-			<Col xs={1}>
-				<Button variant="light" onClick={handleUserSelection}>
-					<i className="bi bi-google"></i>
-					{" Google"}
-				</Button>
-			</Col>
-		</Row>
-	);
-	return (
-		<>
-			<MyNavbar />
-			<div className="m-0 p-0">
-				<div className="cube"></div>
-				<div className="cube"></div>
-				<div className="cube"></div>
-				<div className="cube"></div>
-				<div className="cube"></div>
-			</div>
+	let parentContainerStyle = isLoading ? "vh-100" : "h-100";
 
-			<Container className="py-5">
+	return (
+		<Container className={parentContainerStyle}>
+			<MyNavbar />
+
+			<Container className="">
 				<Row className="my-5">
 					<Col xs={12}>
 						<p className="h1 text-center">
-							Likes registered you can now use the recommendation system!
+							Recommended movies based on your likes!
 						</p>
 					</Col>
 				</Row>
-				<Row>
-					<Col xs={12}>
-						<div className="d-grid">
-							<Button variant="light" size="lg" className="p-4">
-								<i className="bi bi-arrow-down-circle-fill"></i>
-								{" Start recommending"}
-							</Button>
-						</div>
-					</Col>
-				</Row>
+
+				{content}
+
+				{!isLoading && (
+					<Row className="my-4">
+						<Col xs={12}>
+							<div className="d-grid">
+								<Button
+									variant="light"
+									size="lg"
+									className="p-2"
+									onClick={handleUserLikes}>
+									<i className="bi bi-arrow-down-circle-fill"></i>
+									{" Save liked movies"}
+								</Button>
+							</div>
+						</Col>
+					</Row>
+				)}
 			</Container>
-		</>
+
+			<div className="m-0 p-0">
+				<div className="homeCube"></div>
+				<div className="homeCube"></div>
+				<div className="homeCube"></div>
+				<div className="homeCube"></div>
+				<div className="homeCube"></div>
+			</div>
+		</Container>
 	);
 }
 
