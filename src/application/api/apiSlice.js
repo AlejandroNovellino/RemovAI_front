@@ -40,18 +40,20 @@ export const apiSlice = createApi({
 		getWelcomeMovies: builder.query({
 			query: _ => "Pelicula",
 			transformResponse: response => {
+				console.log(`🚀 ~ response:`, response);
 				let welcomeMovies = [];
-				let movies = response.body;
+
+				let movies = response;
 				let amountMovies = movies.length;
 				// get
-				for (const i of Array(5).keys()) {
+				for (const i of Array(6).keys()) {
 					console.log(`🚀 ~ i:`, i);
 
 					welcomeMovies.push(
-						response[Math.floor(Math.random() * amountMovies.length)]
+						response[Math.floor(Math.random() * amountMovies)]
 					);
 				}
-
+				console.log(`🚀 ~ welcomeMovies:`, welcomeMovies);
 				return welcomeMovies;
 			},
 		}),
@@ -63,7 +65,7 @@ export const apiSlice = createApi({
 				const token = state.auth.token;
 				// return the base query
 				return baseQuery({
-					url: `/RecomendIA/Recomiendame`,
+					url: `RecomendIA/Recomiendame`,
 					method: "GET",
 					headers: {
 						Authorization: `Bearer ${token}`,
@@ -81,18 +83,22 @@ export const apiSlice = createApi({
 				const token = state.auth.token;
 				// return the base query
 				return baseQuery({
-					url: `/Likes`,
+					url: `Likes`,
 					method: "POST",
 					headers: {
 						Authorization: `Bearer ${token}`,
 						"Access-Control-Allow-Origin": "https://localhost:3000",
 					},
-					body: likedMovies.map(likedMovie => {
-						return {
-							id_usuario: userId,
-							id_Pelicula: likedMovie.id_pelicula,
-						};
-					}),
+					body: {
+						likes: likedMovies.map(likedMovie => {
+							return {
+								id_usuario: userId,
+								id_Pelicula: Object.hasOwn(likedMovie, "id_pelicula")
+									? likedMovie.id_pelicula
+									: likedMovie.id_Pelicula,
+							};
+						}),
+					},
 				});
 			},
 		}),

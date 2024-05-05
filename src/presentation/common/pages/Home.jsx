@@ -45,7 +45,8 @@ function Home() {
 				likeMovies(likedMovies).unwrap();
 				// now refetch the data to show
 				refetch();
-				// had to do something for redoing the redux hook
+				// empty the liked movies
+				setLikedMovies([]);
 			} catch (err) {
 				// print the error
 				console.error("Could not register selection ", err);
