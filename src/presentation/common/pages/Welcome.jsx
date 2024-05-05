@@ -30,7 +30,7 @@ function Welcome() {
 	const [likeMovies, { isLoadingLikeMovies }] = useLikeMoviesMutation();
 	// react router
 	const navigate = useNavigate();
-	// use effect
+	// use state
 	const [likedMovies, setLikedMovies] = useState([]);
 
 	// login helper, onsubmit function
