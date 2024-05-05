@@ -50,6 +50,7 @@ function SignIn() {
 					email: email,
 					username: username,
 					password: password,
+					role: "usuario",
 				}).unwrap();
 				// sig-in possible so go to welcome
 				navigate("/welcome");
