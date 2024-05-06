@@ -30,6 +30,7 @@ function Home() {
 		isError,
 		error,
 		refetch,
+		isFetching,
 	} = useGetRecommendedMoviesQuery();
 	console.log(`🚀 ~ Home ~ recommendedMovies:`, recommendedMovies);
 
@@ -62,9 +63,11 @@ function Home() {
 		if (!isLoading) {
 			try {
 				// use the kook to register the user selection
-				await likeMovies(likedMovies).unwrap();
-				// now refetch the data to show
-				await refetch().unwrap();
+				await likeMovies(likedMovies)
+					.unwrap()
+					.then(() => {
+						refetch();
+					});
 				// empty the liked movies
 				setLikedMovies([]);
 			} catch (err) {
@@ -91,7 +94,7 @@ function Home() {
 	// content to display
 	let content;
 
-	if (isLoading) {
+	if (isLoading || isFetching) {
 		content = (
 			<>
 				<Row className="justify-content-md-center">
