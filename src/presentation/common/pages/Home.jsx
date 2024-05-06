@@ -20,6 +20,7 @@ import {
 	useGetRecommendedMoviesQuery,
 	useLikeMoviesMutation,
 } from "../../../application/api/apiSlice";
+import MyAlert from "../components/MyAlert";
 
 function Home() {
 	// redux welcome movies
@@ -32,14 +33,18 @@ function Home() {
 		refetch,
 		isFetching,
 	} = useGetRecommendedMoviesQuery();
-	console.log(`🚀 ~ Home ~ recommendedMovies:`, recommendedMovies);
-
 	// redux save likes
 	const [likeMovies /*{ isLoadingLikeMovies }*/] = useLikeMoviesMutation();
 	// use state
 	const [likedMovies, setLikedMovies] = useState([]);
 	const [movieToShowInfo, setMovieToShowInfo] = useState(null);
 	const [show, setShow] = useState(false);
+	// state for alert
+	const [showAlert, setShowAlert] = useState(false);
+	// error message
+	const [errorMessage, setErrorMessage] = useState(
+		"You might have selected a movie that you already like it, we know you love it, but please select another one, we are not a huge team, decisions had to be made U-U"
+	);
 
 	const handleClose = () => setShow(false);
 	const handleShow = () => setShow(true);
@@ -61,18 +66,31 @@ function Home() {
 	// login helper, onsubmit function
 	const handleUserLikes = async () => {
 		if (!isLoading) {
+			if (likedMovies.length < 1) {
+				setErrorMessage(
+					"Please select a minimum of 1 movies :D we are not ChatGPT we don't do magic :c"
+				);
+				setShowAlert(true);
+				return;
+			}
 			try {
 				// use the kook to register the user selection
 				await likeMovies(likedMovies)
 					.unwrap()
 					.then(() => {
 						refetch();
+						// set error to false
+						setShowAlert(false);
+						// empty the liked movies
+						setLikedMovies([]);
 					});
-				// empty the liked movies
-				setLikedMovies([]);
 			} catch (err) {
 				// print the error
 				console.error("Could not register selection ", err);
+				setErrorMessage(
+					"You might have selected a movie that you already like it, we know you love it, but please select another one, we are not a huge team, decisions had to be made U-U"
+				);
+				setShowAlert(true);
 			}
 		}
 	};
@@ -142,16 +160,15 @@ function Home() {
 			</>
 		);
 	} else if (isError) {
+		console.log(`🚀 ~ Home ~ error:`, error);
 		content = (
 			<div>
-				<p className="h2 text-center">
-					{`Oops! An error ocurred UwU ${error.toString()}`}
-				</p>
+				<p className="h2 text-center">{`Oops! An error ocurred UwU`}</p>
 			</div>
 		);
 	}
 
-	let parentContainerStyle = isLoading ? "vh-100" : "h-100";
+	let parentContainerStyle = isLoading || isFetching ? "vh-100" : "h-100";
 
 	return (
 		<Container className={parentContainerStyle}>
@@ -169,7 +186,9 @@ function Home() {
 				<Row className="my-5">
 					<Col xs={12}>
 						<p className="h1 text-center">
-							Recommended movies based on your likes!
+							{isLoading || isFetching
+								? "Doing AI magic UwU"
+								: "Recommended movies based on your likes!"}
 						</p>
 					</Col>
 				</Row>
@@ -177,20 +196,33 @@ function Home() {
 				{content}
 
 				{!isLoading && (
-					<Row className="my-4">
-						<Col xs={12}>
-							<div className="d-grid">
-								<Button
-									variant="light"
-									size="lg"
-									className="p-2"
-									onClick={handleUserLikes}>
-									<i className="bi bi-arrow-down-circle-fill"></i>
-									{" Save liked movies"}
-								</Button>
-							</div>
-						</Col>
-					</Row>
+					<>
+						<Row>
+							<Col xs={12}>
+								{showAlert && (
+									<MyAlert
+										headingMessage={"Oh no!"}
+										message={errorMessage}
+										setShow={setShowAlert}
+									/>
+								)}
+							</Col>
+						</Row>
+						<Row className="pb-5">
+							<Col xs={12}>
+								<div className="d-grid">
+									<Button
+										variant="light"
+										size="lg"
+										className="p-2"
+										onClick={handleUserLikes}>
+										<i className="bi bi-arrow-down-circle-fill"></i>
+										{" Save liked movies"}
+									</Button>
+								</div>
+							</Col>
+						</Row>
+					</>
 				)}
 			</Container>
 

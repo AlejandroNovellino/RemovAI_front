@@ -1,3 +1,5 @@
+// react imports
+import { useState } from "react";
 // react bootstrap imports
 import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
@@ -13,6 +15,8 @@ import { useNavigate } from "react-router-dom";
 import "../styles/Landing.css";
 // import custom components
 import MyNavbar from "../components/MyNavbar";
+import MyAlert from "../components/MyAlert";
+// util imports
 import { strongPasswordRegex } from "../utils/regex";
 // redux exports
 import { useSignInMutation } from "../../../application/api/apiSlice";
@@ -35,6 +39,8 @@ function SignIn() {
 	const [signIn, { isLoadingSignIn }] = useSignInMutation();
 	// react router
 	const navigate = useNavigate();
+	// state for alert
+	const [showAlert, setShowAlert] = useState(false);
 
 	// user inputs
 	const email = watch("email");
@@ -52,11 +58,14 @@ function SignIn() {
 					password: password,
 					role: "usuario",
 				}).unwrap();
+				// set error to false
+				setShowAlert(false);
 				// sig-in possible so go to welcome
 				navigate("/welcome");
 			} catch (err) {
 				// print the error
 				console.error("Could not sign-in: ", err);
+				setShowAlert(true);
 			}
 		}
 	};
@@ -163,6 +172,17 @@ function SignIn() {
 											</Button>
 										</div>
 									</Form>
+									<Row>
+										<Col xs={12}>
+											{showAlert && (
+												<MyAlert
+													headingMessage={"Oh no!"}
+													message={"Something bad happened :c"}
+													setShow={setShowAlert}
+												/>
+											)}
+										</Col>
+									</Row>
 								</Container>
 							</Card.Body>
 						</Card>

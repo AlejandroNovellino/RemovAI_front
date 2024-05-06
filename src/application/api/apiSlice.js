@@ -40,7 +40,6 @@ export const apiSlice = createApi({
 		getWelcomeMovies: builder.query({
 			query: _ => "Pelicula",
 			transformResponse: response => {
-				console.log(`🚀 ~ response:`, response);
 				let welcomeMovies = [];
 
 				let movies = response;
@@ -48,12 +47,10 @@ export const apiSlice = createApi({
 				// get
 				for (const i of Array(6).keys()) {
 					console.log(`🚀 ~ i:`, i);
-
 					welcomeMovies.push(
 						response[Math.floor(Math.random() * amountMovies)]
 					);
 				}
-				console.log(`🚀 ~ welcomeMovies:`, welcomeMovies);
 				return welcomeMovies;
 			},
 		}),

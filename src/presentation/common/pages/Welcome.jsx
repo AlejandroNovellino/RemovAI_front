@@ -17,6 +17,7 @@ import MyNavbar from "../components/MyNavbar";
 // redux exports
 import { useGetWelcomeMoviesQuery } from "../../../application/api/apiSlice";
 import { useLikeMoviesMutation } from "../../../application/api/apiSlice";
+import MyAlert from "../components/MyAlert";
 
 function Welcome() {
 	// redux welcome movies
@@ -32,18 +33,35 @@ function Welcome() {
 	const navigate = useNavigate();
 	// use state
 	const [likedMovies, setLikedMovies] = useState([]);
+	// state for alert
+	const [showAlert, setShowAlert] = useState(false);
+	// error message
+	let [errorMessage, setErrorMessage] = useState(
+		"Please select a minimum of 3 movies :D we are not ChatGPT we don't do magic :c"
+	);
 
 	// login helper, onsubmit function
 	const handleConfirmSelection = async () => {
 		if (!isLoadingLikeMovies) {
+			if (likedMovies.length < 3) {
+				setShowAlert(true);
+				return;
+			}
 			try {
 				// use the kook to register user selection, user liked movies
 				await likeMovies(likedMovies).unwrap();
+				// set error to false
+				setErrorMessage(
+					"Please select a minimum of 3 movies :D we are not ChatGPT we don't do magic :c"
+				);
+				setShowAlert(false);
 				// movies liked possible so go to home
 				navigate("/home");
 			} catch (err) {
 				// print the error
 				console.error("Could not register selection ", err);
+				setErrorMessage("Oops something really abd happened :c");
+				setShowAlert(true);
 			}
 		}
 	};
@@ -93,6 +111,17 @@ function Welcome() {
 
 			<Container className="pb-4">
 				<Row className="row-cols-md-3 g-4">{content}</Row>
+				<Row className="mt-4">
+					<Col xs={12}>
+						{showAlert && (
+							<MyAlert
+								headingMessage={"Oh no!"}
+								message={errorMessage}
+								setShow={setShowAlert}
+							/>
+						)}
+					</Col>
+				</Row>
 				<Row className="my-4">
 					<div className="d-grid">
 						<Button variant="light" size="lg" onClick={handleConfirmSelection}>

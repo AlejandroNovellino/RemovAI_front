@@ -1,3 +1,5 @@
+// react imports
+import { useState } from "react";
 // react bootstrap imports
 import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
@@ -13,6 +15,8 @@ import { useNavigate } from "react-router-dom";
 import "../styles/Landing.css";
 // import custom components
 import MyNavbar from "../components/MyNavbar";
+import MyAlert from "../components/MyAlert";
+// util imports
 import { strongPasswordRegex } from "../utils/regex";
 // redux exports
 import { useLoginMutation } from "../../../application/api/apiSlice";
@@ -34,6 +38,8 @@ function Landing() {
 	const [login, { isLoadingLogin }] = useLoginMutation();
 	// react router
 	const navigate = useNavigate();
+	// state for alert
+	const [showAlert, setShowAlert] = useState(false);
 
 	// user inputs
 	const email = watch("email");
@@ -48,11 +54,14 @@ function Landing() {
 					email: email,
 					password: password,
 				}).unwrap();
+				// set error to false
+				setShowAlert(false);
 				// login possible so go to home
 				navigate("/home");
 			} catch (err) {
 				// print the error
 				console.error("Could not login: ", err);
+				setShowAlert(true);
 			}
 		}
 	};
@@ -178,6 +187,17 @@ function Landing() {
 											</Button>
 										</div>
 									</Form>
+									<Row>
+										<Col xs={12}>
+											{showAlert && (
+												<MyAlert
+													headingMessage={""}
+													message={"Password an/or email error :c"}
+													setShow={setShowAlert}
+												/>
+											)}
+										</Col>
+									</Row>
 								</Container>
 							</Card.Body>
 						</Card>
