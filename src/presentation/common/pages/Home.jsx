@@ -193,7 +193,7 @@ function Home() {
 
 				{content}
 
-				{!isLoading && (
+				{!isLoading && !isFetching && (
 					<>
 						<Row>
 							<Col xs={12}>
