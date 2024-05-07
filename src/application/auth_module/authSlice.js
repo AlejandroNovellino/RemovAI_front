@@ -1,5 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { apiSlice } from "../api/apiSlice";
+import { createSelector } from "reselect";
 
 const initialState = {
 	token: null,
@@ -11,7 +12,14 @@ const initialState = {
 const authSlice = createSlice({
 	name: "auth",
 	initialState: initialState,
-	reducers: {},
+	reducers: {
+		logOut(state) {
+			state.token = null;
+			state.id = "";
+			state.email = "";
+			state.username = "";
+		},
+	},
 	extraReducers: builder => {
 		builder
 			.addMatcher(
@@ -39,8 +47,21 @@ const authSlice = createSlice({
 	},
 });
 
+// Reducer for logout function
+export const { logOut } = authSlice.actions;
+
 // Selector for current user
-export const selectCurrentUser = state => state.auth.user;
+const selectUser = state => state.auth;
+
+export const selectCurrentUser = createSelector([selectUser], user => {
+	// Logic to filter or transform products based on user
+	return {
+		token: user.token,
+		id: user.id,
+		email: user.email,
+		username: user.username,
+	};
+});
 
 // Export the reducer
 export default authSlice.reducer;

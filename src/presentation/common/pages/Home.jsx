@@ -43,7 +43,7 @@ function Home() {
 	const [showAlert, setShowAlert] = useState(false);
 	// error message
 	const [errorMessage, setErrorMessage] = useState(
-		"You might have selected a movie that you already like it, we know you love it, but please select another one, we are not a huge team, decisions had to be made U-U"
+		"You might have selected a movie that you already like, we know you love it, but please select another one, we are not a huge team, decisions had to be made U-U"
 	);
 
 	const handleClose = () => setShow(false);
@@ -88,7 +88,7 @@ function Home() {
 				// print the error
 				console.error("Could not register selection ", err);
 				setErrorMessage(
-					"You might have selected a movie that you already like it, we know you love it, but please select another one, we are not a huge team, decisions had to be made U-U"
+					"You might have selected a movie that you already like, we know you love it, but please select another one, we are not a huge team, decisions had to be made U-U"
 				);
 				setShowAlert(true);
 			}
@@ -131,8 +131,8 @@ function Home() {
 			<>
 				{recommendedMovies.map((element, index) => {
 					return (
-						<>
-							<Row key={element.peliculaDeReferencia}>
+						<div key={element.peliculaDeReferencia}>
+							<Row>
 								<p className="h2 text-center mb-3">
 									{`Because you like: ${element.peliculaDeReferencia}`}
 								</p>
@@ -140,21 +140,19 @@ function Home() {
 							<Row className="justify-content-md-center mb-5">
 								{element.peliculas.map((movie, index) => {
 									return (
-										<>
-											<Col xs={2} key={movie.id_Pelicula}>
-												<HomeMovieCard
-													movie={movie}
-													likedMovies={likedMovies}
-													likeMovie={likeMovie}
-													dislikeMovie={dislikeMovie}
-													handleMovieSelection={handleMovieSelection}
-												/>
-											</Col>
-										</>
+										<Col xs={2} key={movie.id_Pelicula}>
+											<HomeMovieCard
+												movie={movie}
+												likedMovies={likedMovies}
+												likeMovie={likeMovie}
+												dislikeMovie={dislikeMovie}
+												handleMovieSelection={handleMovieSelection}
+											/>
+										</Col>
 									);
 								})}
 							</Row>
-						</>
+						</div>
 					);
 				})}
 			</>
