@@ -7,6 +7,8 @@ import Col from "react-bootstrap/Col";
 import Button from "react-bootstrap/Button";
 import Card from "react-bootstrap/Card";
 import Form from "react-bootstrap/Form";
+// react player
+import ReactPlayer from "react-player/lazy";
 // user form
 import { useForm } from "react-hook-form";
 // react router
@@ -16,8 +18,6 @@ import "../styles/Landing.css";
 // import custom components
 import MyNavbar from "../components/MyNavbar";
 import MyAlert from "../components/MyAlert";
-// util imports
-import { strongPasswordRegex } from "../utils/regex";
 // redux exports
 import { useLoginMutation } from "../../../application/api/apiSlice";
 
@@ -30,8 +30,8 @@ function Landing() {
 		formState: { errors },
 	} = useForm({
 		defaultValues: {
-			email: "",
-			password: "",
+			video: null,
+			videoUrl: null,
 		},
 	});
 	// redux login hook
@@ -42,17 +42,22 @@ function Landing() {
 	const [showAlert, setShowAlert] = useState(false);
 
 	// user inputs
-	const email = watch("email");
-	const password = watch("password");
+	const video = watch("video");
+	const videoUrl = watch("videoUrl");
+
+	if (video) {
+		console.log(`🚀 ~ Landing ~ video:`, video);
+		console.log(`🚀 ~ Landing ~ video[0]:`, video[0]);
+	}
 
 	// login helper, onsubmit function
-	const onSubmitLogin = async () => {
+	const onSubmitDeleteBackground = async () => {
 		if (!isLoadingLogin) {
 			try {
 				// use the kook to login
 				await login({
-					email: email,
-					password: password,
+					video: video,
+					videoUrl: videoUrl,
 				}).unwrap();
 				// set error to false
 				setShowAlert(false);
@@ -67,9 +72,8 @@ function Landing() {
 	};
 
 	return (
-		<Container className="vh-100">
+		<Container fluid className="vh-100 px-4">
 			<MyNavbar />
-			<br />
 			<div className="m-0 p-0">
 				<div className="cube"></div>
 				<div className="cube"></div>
@@ -77,128 +81,93 @@ function Landing() {
 				<div className="cube"></div>
 				<div className="cube"></div>
 			</div>
-			<Container>
+			<Container fluid>
 				<Row>
-					<Col xs={6} className="pe-5 me-2">
-						<Container fluid>
-							<Row>
-								<Col>
-									<p className="fs-1 hover-effect">Welcome to Janna!</p>
-								</Col>
-							</Row>
-							<Row>
-								<Col>
-									<p className="fs-5 fw-light">
-										Start your personalize experience with our different AIs
-										functionalities
-									</p>
-								</Col>
-							</Row>
-							<Row>
-								<Col>
-									<div className="d-grid gap-2">
-										<Button
-											variant="light"
-											onClick={() => navigate("/sign-in")}>
-											{" Start for free"}
-										</Button>
-									</div>
-								</Col>
-							</Row>
-							<Row>
-								<Col>
-									<div className="d-grid gap-2 mt-3">
-										<Button variant="outline-light">
-											{"Have an account already? Login"}
-										</Button>
-									</div>
-								</Col>
-							</Row>
-						</Container>
-					</Col>
-					<Col xs={5}>
+					<p className="fs-1 hover-effect">Welcome to your video assistant!</p>
+				</Row>
+				<Row>
+					<p className="fs-3">
+						Upload a video or a URL for removing the background
+					</p>
+				</Row>
+				<Row className="justify-content-md-center">
+					<Col xs={6}>
 						<Card className="tw-backdrop-blur-sm tw-bg-gray-400/5 tw-shadow-md tw-shadow-indigo-500/50">
 							<Card.Body>
 								<Card.Title className="text-center">
-									Login into your account
+									Your uploaded video
 								</Card.Title>
-								<div className="d-grid gap-2 my-3">
-									<Button variant="outline-light">
-										<i className="bi bi-google"></i>
-										{" Google"}
-									</Button>
-								</div>
-								<hr></hr>
+								<Container className="mb-3 rounded-5">
+									{(video || videoUrl) && (
+										<ReactPlayer
+											className="rounded"
+											width="100%"
+											height="100%"
+											controls={true}
+											loop={true}
+											url={videoUrl || URL.createObjectURL(video[0])}
+										/>
+									)}
+								</Container>
 								<Container>
-									<Form onSubmit={handleSubmit(onSubmitLogin)}>
-										<Form.Group className="mb-3" controlId="formBasicEmail">
-											<Form.Label className="fs-5 fw-light">
-												Email address
-											</Form.Label>
+									<Form onSubmit={handleSubmit(onSubmitDeleteBackground)}>
+										<Form.Group className="mb-3" controlId="video">
 											<Form.Control
-												{...register("email", {
+												{...register("video", {
 													required: {
 														value: true,
-														message: "Email is obligatory",
+														message: "A video must be uploaded",
 													},
 												})}
-												type="email"
-												placeholder="Enter email"
-												isInvalid={errors.email?.message}
+												type="file"
+												placeholder="Enter your video"
+												isInvalid={errors.video?.message}
 												isValid={
-													!Object.hasOwn(errors, "email") && email !== ""
+													!Object.hasOwn(errors, "video") && video !== null
 												}
 											/>
 											<Form.Control.Feedback type="invalid">
-												{errors.email?.message}
+												{errors.video?.message}
 											</Form.Control.Feedback>
 										</Form.Group>
 
-										<Form.Group className="mb-3" controlId="formBasicPassword">
-											<Form.Label className="fs-5 fw-light">
-												Password
-											</Form.Label>
+										<Form.Group className="mb-3" controlId="videoUrl">
 											<Form.Control
-												{...register("password", {
+												{...register("videoUrl", {
 													required: {
 														value: true,
-														message: "Password is obligatory",
-													},
-													pattern: {
-														value: strongPasswordRegex,
-														message:
-															"The password must be at least 8 characters long, have at least one lowercase, one uppercase, one  digit and one special character from !@#$%^&*",
+														message: "A video URL is necessary",
 													},
 												})}
-												type="password"
-												placeholder="Password"
-												isInvalid={errors.password?.message}
+												type="text"
+												placeholder="Video url"
+												isInvalid={errors.videoUrl?.message}
 												isValid={
-													!Object.hasOwn(errors, "password") && password !== ""
+													!Object.hasOwn(errors, "videoUrl") &&
+													videoUrl !== null
 												}
 											/>
 											<Form.Control.Feedback type="invalid">
-												{errors.password?.message}
+												{errors.videoUrl?.message}
 											</Form.Control.Feedback>
 										</Form.Group>
 										<div className="d-grid gap-2 my-3 ">
 											<Button type="submit" variant="light">
-												{"Login"}
+												{"Delete background"}
 											</Button>
 										</div>
 									</Form>
-									<Row>
-										<Col xs={12}>
-											{showAlert && (
-												<MyAlert
-													headingMessage={""}
-													message={"Password an/or email error :c"}
-													setShow={setShowAlert}
-												/>
-											)}
-										</Col>
-									</Row>
 								</Container>
+							</Card.Body>
+						</Card>
+					</Col>
+					<Col xs={6}>
+						<Card className="tw-backdrop-blur-sm tw-bg-gray-400/5 tw-shadow-md tw-shadow-indigo-500/50">
+							<Card.Body>
+								<Card.Title className="text-center">
+									Your modified video
+								</Card.Title>
+								<Container></Container>
 							</Card.Body>
 						</Card>
 					</Col>
