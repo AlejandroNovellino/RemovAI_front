@@ -11,15 +11,18 @@ import Form from "react-bootstrap/Form";
 import ReactPlayer from "react-player/lazy";
 // user form
 import { useForm } from "react-hook-form";
-// react router
-import { useNavigate } from "react-router-dom";
 // import styles
 import "../styles/Landing.css";
 // import custom components
 import MyNavbar from "../components/MyNavbar";
 import MyAlert from "../components/MyAlert";
 // redux exports
-import { useLoginMutation } from "../../../application/api/apiSlice";
+import { useDeleteBackgroundMutation } from "../../../application/api/apiSlice";
+// loaders
+import { squircle } from "ldrs";
+
+//
+squircle.register();
 
 function Landing() {
 	// form hook
@@ -35,11 +38,15 @@ function Landing() {
 		},
 	});
 	// redux login hook
-	const [login, { isLoadingLogin }] = useLoginMutation();
-	// react router
-	const navigate = useNavigate();
+	//const [backgroundDelete, { isLoadingBackgroundDelete }] =
+	const [deleteBackground, { data, isLoading, isSuccess, isError, error }] =
+		useDeleteBackgroundMutation();
 	// state for alert
 	const [showAlert, setShowAlert] = useState(false);
+	// error message
+	let [errorMessage, setErrorMessage] = useState("Oh no something happened");
+	// state for result video
+	//const [resultVideo, setResultVideo] = useState(null);
 
 	// user inputs
 	const video = watch("video");
@@ -52,20 +59,24 @@ function Landing() {
 
 	// login helper, onsubmit function
 	const onSubmitDeleteBackground = async () => {
-		if (!isLoadingLogin) {
+		if (!video && !videoUrl) {
+			// print the error
+			console.error("Please select something to upload");
+			setErrorMessage("Please select something to upload");
+			setShowAlert(true);
+			return;
+		}
+		if (!isLoading) {
 			try {
+				// get the element
+				let input = video || videoUrl;
 				// use the kook to login
-				await login({
-					video: video,
-					videoUrl: videoUrl,
-				}).unwrap();
+				await deleteBackground(input).unwrap();
 				// set error to false
 				setShowAlert(false);
-				// login possible so go to home
-				navigate("/home");
 			} catch (err) {
 				// print the error
-				console.error("Could not login: ", err);
+				console.error("Could not delete background: ", err);
 				setShowAlert(true);
 			}
 		}
@@ -113,18 +124,14 @@ function Landing() {
 									<Form onSubmit={handleSubmit(onSubmitDeleteBackground)}>
 										<Form.Group className="mb-3" controlId="video">
 											<Form.Control
-												{...register("video", {
-													required: {
-														value: true,
-														message: "A video must be uploaded",
-													},
-												})}
+												{...register("video")}
 												type="file"
 												placeholder="Enter your video"
 												isInvalid={errors.video?.message}
 												isValid={
 													!Object.hasOwn(errors, "video") && video !== null
 												}
+												name="video"
 											/>
 											<Form.Control.Feedback type="invalid">
 												{errors.video?.message}
@@ -133,12 +140,7 @@ function Landing() {
 
 										<Form.Group className="mb-3" controlId="videoUrl">
 											<Form.Control
-												{...register("videoUrl", {
-													required: {
-														value: true,
-														message: "A video URL is necessary",
-													},
-												})}
+												{...register("videoUrl")}
 												type="text"
 												placeholder="Video url"
 												isInvalid={errors.videoUrl?.message}
@@ -157,6 +159,17 @@ function Landing() {
 											</Button>
 										</div>
 									</Form>
+									<Row>
+										<Col xs={12}>
+											{showAlert && (
+												<MyAlert
+													headingMessage={"Oh no!"}
+													message={errorMessage}
+													setShow={setShowAlert}
+												/>
+											)}
+										</Col>
+									</Row>
 								</Container>
 							</Card.Body>
 						</Card>
@@ -167,7 +180,40 @@ function Landing() {
 								<Card.Title className="text-center">
 									Your modified video
 								</Card.Title>
-								<Container></Container>
+								<Container className="mb-3 rounded-5">
+									<Row className="justify-content-md-center">
+										{!isLoading && !isError && (
+											<Col xs={12}>
+												<ReactPlayer
+													className="rounded"
+													width="100%"
+													height="100%"
+													controls={true}
+													loop={true}
+													url={data?.output_url}
+												/>
+											</Col>
+										)}
+										{isLoading && (
+											<Col xs={3} className="mt-4">
+												<l-squircle
+													size="60"
+													stroke="7"
+													stroke-length="0.15"
+													bg-opacity="0.15"
+													speed="01"
+													color="white"></l-squircle>
+											</Col>
+										)}
+										{isError && (
+											<Col xs={8}>
+												<p className="h4">
+													Something bad happened in our end :c
+												</p>
+											</Col>
+										)}
+									</Row>
+								</Container>
 							</Card.Body>
 						</Card>
 					</Col>

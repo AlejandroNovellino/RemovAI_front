@@ -4,18 +4,10 @@ import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 export const apiSlice = createApi({
 	reducerPath: "api",
 	baseQuery: fetchBaseQuery({
-		baseUrl: "https://localhost:7001/api/", // MockApi "https://662e73e9a7dda1fa378d0185.mockapi.io/api/v1/",
+		baseUrl: "http://localhost:5000/", // MockApi "https://662e73e9a7dda1fa378d0185.mockapi.io/api/v1/",
 	}),
 
 	endpoints: builder => ({
-		// all endpoints can go here or use the injectEndpoints()
-		// see documentation for that
-		// build.query() for get data
-		// builder.mutation() sends updates to the server
-		// -- get user query
-		getUsers: builder.mutation({
-			query: () => `/users`,
-		}),
 		// -- login user mutation
 		login: builder.mutation({
 			query: credentials => ({
@@ -35,78 +27,26 @@ export const apiSlice = createApi({
 				},
 			}),
 		}),
-		// other endpoints
-		// -- get welcome movies
-		getWelcomeMovies: builder.query({
-			query: _ => "Pelicula",
-			transformResponse: response => {
-				let welcomeMovies = [];
-
-				let movies = response;
-				let amountMovies = movies.length;
-				// get
-				for (const i of Array(6).keys()) {
-					console.log(`🚀 ~ i:`, i);
-					welcomeMovies.push(
-						response[Math.floor(Math.random() * amountMovies)]
-					);
-				}
-				return welcomeMovies;
-			},
-		}),
+		// delete background api
 		// -- get movies
-		getRecommendedMovies: builder.query({
-			queryFn: (likedMovies, api, extraOptions, baseQuery) => {
-				// get the store to get the user token
-				const state = api.getState();
-				const token = state.auth.token;
-				// return the base query
-				return baseQuery({
-					url: `RecomendIA/Recomiendame`,
-					method: "GET",
-					headers: {
-						Authorization: `Bearer ${token}`,
-						"Access-Control-Allow-Origin": "https://localhost:3000",
-					},
-				});
-			},
-		}),
-		// -- like movies
-		likeMovies: builder.mutation({
-			queryFn: (likedMovies, api, extraOptions, baseQuery) => {
-				// get the store to get the user id and token
-				const state = api.getState();
-				const userId = state.auth.id;
-				const token = state.auth.token;
-				// return the base query
-				return baseQuery({
-					url: `Likes`,
-					method: "POST",
-					headers: {
-						Authorization: `Bearer ${token}`,
-						"Access-Control-Allow-Origin": "https://localhost:3000",
-					},
-					body: {
-						likes: likedMovies.map(likedMovie => {
-							return {
-								id_usuario: userId,
-								id_Pelicula: Object.hasOwn(likedMovie, "id_pelicula")
-									? likedMovie.id_pelicula
-									: likedMovie.id_Pelicula,
-							};
-						}),
-					},
-				});
-			},
+		deleteBackground: builder.mutation({
+			query: video => ({
+				//url: `eliminar-fondo`,
+				url: `delete-background`,
+				method: "POST",
+				body: {
+					input: video,
+				},
+				headers: {
+					"Access-Control-Allow-Origin": "https://localhost:3000",
+				},
+			}),
 		}),
 	}),
 });
 
 export const {
-	useGetUsersQuery,
 	useLoginMutation,
 	useSignInMutation,
-	useGetWelcomeMoviesQuery,
-	useGetRecommendedMoviesQuery,
-	useLikeMoviesMutation,
+	useDeleteBackgroundMutation,
 } = apiSlice;
