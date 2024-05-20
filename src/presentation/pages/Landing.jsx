@@ -82,8 +82,10 @@ function Landing() {
 		}
 	};
 
+	let container_design = !video && !videoUrl ? "vh-100" : "v-100";
+
 	return (
-		<Container fluid className="vh-100 px-4">
+		<Container fluid className={`${container_design} px-4`}>
 			<MyNavbar />
 			<div className="m-0 p-0">
 				<div className="cube"></div>
@@ -92,7 +94,7 @@ function Landing() {
 				<div className="cube"></div>
 				<div className="cube"></div>
 			</div>
-			<Container fluid>
+			<Container fluid className="py-5">
 				<Row>
 					<p className="fs-1 hover-effect">Welcome to your video assistant!</p>
 				</Row>
