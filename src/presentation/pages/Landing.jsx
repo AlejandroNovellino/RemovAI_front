@@ -94,7 +94,7 @@ function Landing() {
 				<div className="cube"></div>
 				<div className="cube"></div>
 			</div>
-			<Container fluid className="py-5">
+			<Container fluid className="pb-5">
 				<Row>
 					<p className="fs-1 hover-effect">Welcome to your video assistant!</p>
 				</Row>
