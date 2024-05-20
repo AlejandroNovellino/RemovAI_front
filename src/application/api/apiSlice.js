@@ -4,7 +4,7 @@ import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 export const apiSlice = createApi({
 	reducerPath: "api",
 	baseQuery: fetchBaseQuery({
-		baseUrl: "http://localhost:5000/", // MockApi "https://662e73e9a7dda1fa378d0185.mockapi.io/api/v1/",
+		baseUrl: "http://localhost:5000/delete-background/", // MockApi "https://662e73e9a7dda1fa378d0185.mockapi.io/api/v1/",
 	}),
 
 	endpoints: builder => ({
@@ -28,11 +28,21 @@ export const apiSlice = createApi({
 			}),
 		}),
 		// delete background api
-		// -- get movies
-		deleteBackground: builder.mutation({
+		deleteBackgroundFromUrl: builder.mutation({
 			query: video => ({
-				//url: `eliminar-fondo`,
-				url: `delete-background`,
+				url: `url`,
+				method: "POST",
+				body: {
+					input: video,
+				},
+				headers: {
+					"Access-Control-Allow-Origin": "https://localhost:3000",
+				},
+			}),
+		}),
+		deleteBackgroundFromFile: builder.mutation({
+			query: video => ({
+				url: `file`,
 				method: "POST",
 				body: {
 					input: video,
@@ -48,5 +58,6 @@ export const apiSlice = createApi({
 export const {
 	useLoginMutation,
 	useSignInMutation,
-	useDeleteBackgroundMutation,
+	useDeleteBackgroundFromUrlMutation,
+	useDeleteBackgroundFromFileMutation,
 } = apiSlice;

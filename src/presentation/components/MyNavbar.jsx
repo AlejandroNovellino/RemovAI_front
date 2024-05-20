@@ -7,7 +7,7 @@ import { useSelector, useDispatch } from "react-redux";
 import {
 	selectCurrentUser,
 	logOut,
-} from "../../../application/auth_module/authSlice";
+} from "../../application/auth_module/authSlice";
 // react router
 import { useNavigate } from "react-router-dom";
 // import image

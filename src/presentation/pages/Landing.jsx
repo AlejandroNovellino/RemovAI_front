@@ -17,7 +17,7 @@ import "../styles/Landing.css";
 import MyNavbar from "../components/MyNavbar";
 import MyAlert from "../components/MyAlert";
 // redux exports
-import { useDeleteBackgroundMutation } from "../../../application/api/apiSlice";
+import { useDeleteBackgroundFromUrlMutation } from "../../application/api/apiSlice";
 // loaders
 import { squircle } from "ldrs";
 
@@ -40,7 +40,7 @@ function Landing() {
 	// redux login hook
 	//const [backgroundDelete, { isLoadingBackgroundDelete }] =
 	const [deleteBackground, { data, isLoading, isSuccess, isError, error }] =
-		useDeleteBackgroundMutation();
+		useDeleteBackgroundFromUrlMutation();
 	// state for alert
 	const [showAlert, setShowAlert] = useState(false);
 	// error message
