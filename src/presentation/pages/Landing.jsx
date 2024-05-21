@@ -17,7 +17,10 @@ import "../styles/Landing.css";
 import MyNavbar from "../components/MyNavbar";
 import MyAlert from "../components/MyAlert";
 // redux exports
-import { useDeleteBackgroundFromUrlMutation } from "../../application/api/apiSlice";
+import {
+	useDeleteBackgroundFromUrlMutation,
+	useDeleteBackgroundFromFileMutation,
+} from "../../application/api/apiSlice";
 // loaders
 import { squircle } from "ldrs";
 
@@ -33,45 +36,62 @@ function Landing() {
 		formState: { errors },
 	} = useForm({
 		defaultValues: {
-			video: null,
+			videoFile: null,
 			videoUrl: null,
 		},
 	});
-	// redux login hook
-	//const [backgroundDelete, { isLoadingBackgroundDelete }] =
-	const [deleteBackground, { data, isLoading, isSuccess, isError, error }] =
-		useDeleteBackgroundFromUrlMutation();
+	// redux
+	// from file
+	const [
+		deleteFileBackground,
+		{
+			data: videoFileData,
+			isLoading: isLoadingVideoFile,
+			isError: isErrorVideoFile,
+			isSuccess: isSuccessVideoFile,
+		},
+	] = useDeleteBackgroundFromFileMutation();
+	// from url
+	const [
+		deleteUrlBackground,
+		{
+			data: videoUrlData,
+			isLoading: isLoadingVideoUrl,
+			isError: isErrorVideoUrl,
+			isSuccess: isSuccessVideoUrl,
+		},
+	] = useDeleteBackgroundFromUrlMutation();
 	// state for alert
 	const [showAlert, setShowAlert] = useState(false);
 	// error message
 	let [errorMessage, setErrorMessage] = useState("Oh no something happened");
-	// state for result video
-	//const [resultVideo, setResultVideo] = useState(null);
 
 	// user inputs
-	const video = watch("video");
+	const videoFile = watch("videoFile");
 	const videoUrl = watch("videoUrl");
-
-	if (video) {
-		console.log(`🚀 ~ Landing ~ video:`, video);
-		console.log(`🚀 ~ Landing ~ video[0]:`, video[0]);
-	}
 
 	// login helper, onsubmit function
 	const onSubmitDeleteBackground = async () => {
-		if (!video && !videoUrl) {
+		if (!videoFile && !videoUrl) {
 			// print the error
 			console.error("Please select something to upload");
 			setErrorMessage("Please select something to upload");
 			setShowAlert(true);
 			return;
 		}
-		if (!isLoading) {
+
+		if (!isLoadingVideoFile || isLoadingVideoUrl) {
 			try {
-				// get the element
-				let input = video || videoUrl;
-				// use the kook to login
-				await deleteBackground(input).unwrap();
+				// verify if the video is a file or a url
+				if (videoFile) {
+					// video is from file
+					// use the kook to
+					await deleteFileBackground(videoFile[0]).unwrap();
+				} else if (videoUrl) {
+					// video is from url
+					// use the kook to
+					await deleteUrlBackground(videoUrl).unwrap();
+				}
 				// set error to false
 				setShowAlert(false);
 			} catch (err) {
@@ -82,7 +102,13 @@ function Landing() {
 		}
 	};
 
-	let container_design = !video && !videoUrl ? "vh-100" : "v-100";
+	// container design
+	let container_design = !videoFile && !videoUrl ? "vh-100" : "v-100";
+
+	// print video info
+	console.log(`🚀 ~ Landing ~ videoFileData:`, videoFileData);
+	console.log(`🚀 ~ Landing ~ videoUrlData:`, videoUrlData);
+	console.log(videoFileData?.output_url || videoUrlData?.output_url);
 
 	return (
 		<Container fluid className={`${container_design} px-4`}>
@@ -111,29 +137,30 @@ function Landing() {
 									Your uploaded video
 								</Card.Title>
 								<Container className="mb-3 rounded-5">
-									{(video || videoUrl) && (
+									{(videoFile || videoUrl) && (
 										<ReactPlayer
 											className="rounded"
 											width="100%"
 											height="100%"
 											controls={true}
 											loop={true}
-											url={videoUrl || URL.createObjectURL(video[0])}
+											url={videoUrl || URL.createObjectURL(videoFile?.item(0))}
 										/>
 									)}
 								</Container>
 								<Container>
 									<Form onSubmit={handleSubmit(onSubmitDeleteBackground)}>
-										<Form.Group className="mb-3" controlId="video">
+										<Form.Group className="mb-3" controlId="videoFile">
 											<Form.Control
-												{...register("video")}
+												{...register("videoFile")}
 												type="file"
 												placeholder="Enter your video"
-												isInvalid={errors.video?.message}
+												isInvalid={errors.videoFile?.message}
 												isValid={
-													!Object.hasOwn(errors, "video") && video !== null
+													!Object.hasOwn(errors, "videoFile") &&
+													videoFile !== null
 												}
-												name="video"
+												name="videoFile"
 											/>
 											<Form.Control.Feedback type="invalid">
 												{errors.video?.message}
@@ -184,20 +211,26 @@ function Landing() {
 								</Card.Title>
 								<Container className="mb-3 rounded-5">
 									<Row className="justify-content-md-center">
-										{!isLoading && !isError && (
-											<Col xs={12}>
-												<ReactPlayer
-													className="rounded"
-													width="100%"
-													height="100%"
-													controls={true}
-													loop={true}
-													url={data?.output_url}
-												/>
-											</Col>
-										)}
-										{isLoading && (
-											<Col xs={3} className="mt-4">
+										{!isLoadingVideoFile &&
+											!isErrorVideoFile &&
+											!isLoadingVideoUrl &&
+											!isErrorVideoUrl && (
+												<Col xs={12}>
+													<ReactPlayer
+														className="rounded"
+														width="100%"
+														height="100%"
+														controls={true}
+														loop={true}
+														url={
+															videoFileData?.output_url ||
+															videoUrlData?.output_url
+														}
+													/>
+												</Col>
+											)}
+										{(isLoadingVideoFile || isLoadingVideoUrl) && (
+											<Col xs={2} className="mt-4">
 												<l-squircle
 													size="60"
 													stroke="7"
@@ -207,7 +240,7 @@ function Landing() {
 													color="white"></l-squircle>
 											</Col>
 										)}
-										{isError && (
+										{isErrorVideoFile && (
 											<Col xs={8}>
 												<p className="h4">
 													Something bad happened in our end :c

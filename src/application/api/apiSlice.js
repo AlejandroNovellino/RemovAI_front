@@ -23,7 +23,7 @@ export const apiSlice = createApi({
 				method: "POST",
 				body: credentials,
 				headers: {
-					"Access-Control-Allow-Origin": "https://localhost:3000",
+					"Access-Control-Allow-Origin": "http://localhost:3000",
 				},
 			}),
 		}),
@@ -36,21 +36,27 @@ export const apiSlice = createApi({
 					input: video,
 				},
 				headers: {
-					"Access-Control-Allow-Origin": "https://localhost:3000",
+					"Access-Control-Allow-Origin": "http://localhost:3000",
 				},
 			}),
 		}),
 		deleteBackgroundFromFile: builder.mutation({
-			query: video => ({
-				url: `file`,
-				method: "POST",
-				body: {
-					input: video,
-				},
-				headers: {
-					"Access-Control-Allow-Origin": "https://localhost:3000",
-				},
-			}),
+			query: video => {
+				// set the form data
+				var bodyFormData = new FormData();
+				bodyFormData.append("video", video);
+				console.log({ bodyFormData, video });
+				// return object
+				return {
+					url: `file`,
+					method: "POST",
+					formData: true,
+					body: bodyFormData,
+					headers: {
+						"Access-Control-Allow-Origin": "http://localhost:3000",
+					},
+				};
+			},
 		}),
 	}),
 });
