@@ -137,16 +137,27 @@ function Landing() {
 									Your uploaded video
 								</Card.Title>
 								<Container className="mb-3 rounded-5">
-									{(videoFile || videoUrl) && (
+									{(videoFile || videoUrl) && 
+										(videoFile[0].type === "image/gif" ? (
+										<img
+											src={URL.createObjectURL(videoFile[0])}
+											alt="GIF"
+											className="rounded"
+											style={{ width: "100%", height: "100%" }}
+										/>
+										) : (
 										<ReactPlayer
 											className="rounded"
 											width="100%"
 											height="100%"
 											controls={true}
 											loop={true}
-											url={videoUrl || URL.createObjectURL(videoFile?.item(0))}
+											url={
+											videoUrl ||
+											(videoFile && URL.createObjectURL(videoFile[0]))
+											}
 										/>
-									)}
+										))}
 								</Container>
 								<Container>
 									<Form onSubmit={handleSubmit(onSubmitDeleteBackground)}>
@@ -167,7 +178,7 @@ function Landing() {
 											</Form.Control.Feedback>
 										</Form.Group>
 
-										<Form.Group className="mb-3" controlId="videoUrl">
+										{/* <Form.Group className="mb-3" controlId="videoUrl">
 											<Form.Control
 												{...register("videoUrl")}
 												type="text"
@@ -181,7 +192,7 @@ function Landing() {
 											<Form.Control.Feedback type="invalid">
 												{errors.videoUrl?.message}
 											</Form.Control.Feedback>
-										</Form.Group>
+										</Form.Group> */}
 										<div className="d-grid gap-2 my-3 ">
 											<Button type="submit" variant="light">
 												{"Delete background"}
@@ -216,6 +227,14 @@ function Landing() {
 											!isLoadingVideoUrl &&
 											!isErrorVideoUrl && (
 												<Col xs={12}>
+													{videoFileData?.output_url?.endsWith(".gif") ? (
+														<img
+														src={videoFileData?.output_url}
+														alt="GIF"
+														className="rounded"
+														style={{ width: "100%", height: "100%" }}
+														/>
+													) : (
 													<ReactPlayer
 														className="rounded"
 														width="100%"
@@ -227,6 +246,20 @@ function Landing() {
 															videoUrlData?.output_url
 														}
 													/>
+													)}
+													{(videoFileData?.output_url || videoUrlData?.output_url) && (
+														<Button
+														variant="primary"
+														href={
+															videoFileData?.output_url ||
+															videoUrlData?.output_url
+														}
+														download
+														className="mt-5"
+														>
+														Descargar !
+														</Button>
+													)}
 												</Col>
 											)}
 										{(isLoadingVideoFile || isLoadingVideoUrl) && (
