@@ -126,20 +126,23 @@ function Landing() {
 							<h1 className="mb-4" style={{ fontFamily: 'Arial, sans-serif', fontWeight: 'bold', color: '#C39A06', fontSize: '65px' }}>
 								Video Background Remover
 							</h1>
-							<h5>Easily swap out your video's background with just one click!</h5>
-							<button onClick={() => { document.getElementById('uploadRow').scrollIntoView({ behavior: 'smooth' }) }} className="btn btn-primary" style={{ borderRadius: '40px', backgroundColor: '#C39A06', borderColor: '#C39A06', fontWeight: 'bold', marginTop: '20px', padding: '10px 40px', fontSize: '1.25rem' }}>Get Started</button>
+							<h5 style={{ paddingRight: '55px'}}>Easily swap out your video's background with just one click, converting it into a green screen so you can edit your video with any background you desire!</h5>
+							<button
+								onClick={() => { document.getElementById('uploadRow').scrollIntoView({ behavior: 'smooth' }) }}
+								className="btn btn-primary btn-custom"
+							>
+								Get started with your video
+							</button>
 						</div>
 						</div>
 						<div className="col-md-6 d-flex justify-content-center">
-						<img src={imagebg} width="100%" height="auto" />
+							<img src={imagebg} width="90%" height="auto" className="image-shadow-custom" />
 						</div>
 					</div>
 				</Row>
 
-				<Row className="my-5 border-top border-yellow"></Row>
-
-				<Row className="align-items-center" style={{ padding: '20px' }}>
-					<h2 className="mb-5">How it works</h2>
+				<Row className="align-items-center" style={{ padding: '80px', backgroundColor: '#2A2A2A', marginTop: '60px', marginBottom: '60px'}}>
+					<h2 className="mb-5">HOW IT WORKS</h2>
 					<Col xs={12} md={4} className="text-center mb-4">
 						<img src={image1} alt="Step 1" width="110" />
 						<p className="fs-5" style={{ marginTop: '30px' }}>1. Upload a video or paste an URL</p>
@@ -154,19 +157,17 @@ function Landing() {
 					</Col>
 				</Row>
 
-				<Row className="my-5 border-top border-yellow"></Row>
-
 				<Row>
-					<p className="fs-1">
-						Remove your video background
+					<p className="fs-1 d-flex justify-content-center align-items-center" style={{ marginBottom: '40px', fontWeight: 'bold' }}>
+						Remove Your Video Background
 					</p>
 				</Row>
 				<Row>
-					<p className="fs-3">
+					<p className="fs-3" style={{ marginBottom: '40px' }}>
 						Upload a video or paste an URL
 					</p>
 				</Row>
-				<Row id="uploadRow" className="justify-content-md-center">
+				<Row id="uploadRow" className="justify-content-md-center" style={{ marginBottom: '90px' }}>
 					<Col xs={6}>
 						<Card className="card-custom tw-backdrop-blur-sm card-shadow-custom">
 							<Card.Body>
