@@ -6,6 +6,7 @@
 @import url("https://cdn.jsdelivr.net/npm/bootstrap-icons@1.3.0/font/bootstrap-icons.css");
 
 body {
+	min-height: 100vh;
 	margin: 0;
 	font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
 		"Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
@@ -126,3 +127,21 @@ video {
 		opacity: 0;
 	}
 }
+
+.button-custom {
+	background-color: #C39A06;
+	border-color: #C39A06;
+  }
+  
+  .button-custom:hover {
+	background-color: #806504;
+	border-color: #806504;
+  }
+
+.bold-text {
+	font-weight: bold;
+}
+
+.card-shadow-custom {
+	box-shadow: 0 0 10px rgba(255, 200, 0, 0.5);
+  }

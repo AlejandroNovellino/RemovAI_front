@@ -23,6 +23,12 @@ import {
 } from "../../application/api/apiSlice";
 // loaders
 import { squircle } from "ldrs";
+// import image
+import imagebg from "./../images/man-no-bg.png";
+import image1 from "./../images/file.png";
+import image2 from "./../images/click.png";
+import image3 from "./../images/magic.png";
+
 
 //
 squircle.register();
@@ -58,7 +64,6 @@ function Landing() {
 			data: videoUrlData,
 			isLoading: isLoadingVideoUrl,
 			isError: isErrorVideoUrl,
-			isSuccess: isSuccessVideoUrl,
 		},
 	] = useDeleteBackgroundFromUrlMutation();
 	// state for alert
@@ -103,7 +108,7 @@ function Landing() {
 	};
 
 	// container design
-	let container_design = !videoFile && !videoUrl ? "vh-100" : "v-100";
+	let container_design = !videoFile && !videoUrl ? "min-vh-100" : "v-100";
 
 	// print video info
 	console.log(`🚀 ~ Landing ~ videoFileData:`, videoFileData);
@@ -113,25 +118,57 @@ function Landing() {
 	return (
 		<Container fluid className={`${container_design} px-4`}>
 			<MyNavbar />
-			<div className="m-0 p-0">
-				<div className="cube"></div>
-				<div className="cube"></div>
-				<div className="cube"></div>
-				<div className="cube"></div>
-				<div className="cube"></div>
-			</div>
 			<Container fluid className="pb-5">
 				<Row>
-					<p className="fs-1 hover-effect">Welcome to your video assistant!</p>
+					<div className="d-flex justify-content-center align-items-center mb-3">
+						<div className="col-md-6">
+						<div className="ms-5">
+							<h1 className="mb-4" style={{ fontFamily: 'Arial, sans-serif', fontWeight: 'bold', color: '#C39A06', fontSize: '65px' }}>
+								Video Background Remover
+							</h1>
+							<h5>Easily swap out your video's background with just one click!</h5>
+							<button onClick={() => { document.getElementById('uploadRow').scrollIntoView({ behavior: 'smooth' }) }} className="btn btn-primary" style={{ borderRadius: '40px', backgroundColor: '#C39A06', borderColor: '#C39A06', fontWeight: 'bold', marginTop: '20px', padding: '10px 40px', fontSize: '1.25rem' }}>Get Started</button>
+						</div>
+						</div>
+						<div className="col-md-6 d-flex justify-content-center">
+						<img src={imagebg} width="100%" height="auto" />
+						</div>
+					</div>
+				</Row>
+
+				<Row className="my-5 border-top border-yellow"></Row>
+
+				<Row className="align-items-center" style={{ padding: '20px' }}>
+					<h2 className="mb-5">How it works</h2>
+					<Col xs={12} md={4} className="text-center mb-4">
+						<img src={image1} alt="Step 1" width="110" />
+						<p className="fs-5" style={{ marginTop: '30px' }}>1. Upload a video or paste an URL</p>
+					</Col>
+					<Col xs={12} md={4} className="text-center mb-4">
+						<img src={image2} alt="Step 2" width="110" />
+						<p className="fs-5" style={{ marginTop: '30px' }}>2. Click on "Delete background"</p>
+					</Col>
+					<Col xs={12} md={4} className="text-center mb-4">
+						<img src={image3} alt="Step 3" width="110" />
+						<p className="fs-5" style={{ marginTop: '30px' }}>3. Wait for the magic to happen</p>
+					</Col>
+				</Row>
+
+				<Row className="my-5 border-top border-yellow"></Row>
+
+				<Row>
+					<p className="fs-1">
+						Remove your video background
+					</p>
 				</Row>
 				<Row>
 					<p className="fs-3">
-						Upload a video or a URL for removing the background
+						Upload a video or paste an URL
 					</p>
 				</Row>
-				<Row className="justify-content-md-center">
+				<Row id="uploadRow" className="justify-content-md-center">
 					<Col xs={6}>
-						<Card className="tw-backdrop-blur-sm tw-bg-gray-400/5 tw-shadow-md tw-shadow-indigo-500/50">
+						<Card className="card-custom tw-backdrop-blur-sm card-shadow-custom">
 							<Card.Body>
 								<Card.Title className="text-center">
 									Your uploaded video
@@ -182,9 +219,9 @@ function Landing() {
 												{errors.videoUrl?.message}
 											</Form.Control.Feedback>
 										</Form.Group>
-										<div className="d-grid gap-2 my-3 ">
-											<Button type="submit" variant="light">
-												{"Delete background"}
+										<div className="d-grid gap-2 my-3">
+											<Button type="submit" className="button-custom">
+												<span className="bold-text">Delete background</span>
 											</Button>
 										</div>
 									</Form>
@@ -204,7 +241,7 @@ function Landing() {
 						</Card>
 					</Col>
 					<Col xs={6}>
-						<Card className="tw-backdrop-blur-sm tw-bg-gray-400/5 tw-shadow-md tw-shadow-indigo-500/50">
+						<Card className="card-custom tw-backdrop-blur-sm card-shadow-custom">
 							<Card.Body>
 								<Card.Title className="text-center">
 									Your modified video
@@ -229,17 +266,6 @@ function Landing() {
 													/>
 												</Col>
 											)}
-										{(isLoadingVideoFile || isLoadingVideoUrl) && (
-											<Col xs={2} className="mt-4">
-												<l-squircle
-													size="60"
-													stroke="7"
-													stroke-length="0.15"
-													bg-opacity="0.15"
-													speed="01"
-													color="white"></l-squircle>
-											</Col>
-										)}
 										{isErrorVideoFile && (
 											<Col xs={8}>
 												<p className="h4">

@@ -11,7 +11,7 @@ import {
 // react router
 import { useNavigate } from "react-router-dom";
 // import image
-import logo from "./../images/Logo.png";
+import logo from "./../images/edit-video2.png";
 
 function MyNavbar() {
 	// select the auth state
@@ -34,16 +34,21 @@ function MyNavbar() {
 
 	return (
 		<>
-			<Navbar bg="dark" data-bs-theme="dark" className="bg-dark-subtle mb-5">
+			<Navbar bg="dark" data-bs-theme="dark" className="bg-dark-subtle mb-3">
 				<Container>
-					<Navbar.Brand className="ms-1 pt-2">
-						<img
+					<Navbar.Brand className="pt-2 d-flex align-items-center">
+						<div className="me-auto">
+							<img
 							alt=""
 							src={logo}
 							width="118"
-							height="33"
+							height="110"
 							className="d-inline-block align-top"
-						/>
+							/>
+						</div>
+						<div>
+							<h1 className="ms-3" style={{ fontFamily: 'Arial, sans-serif', fontWeight: 'bold' }}>RemovAI</h1>
+						</div>
 					</Navbar.Brand>
 					{user.token && (
 						<Navbar.Collapse className="justify-content-end">
