@@ -146,7 +146,7 @@ function Landing() {
 					<h2 className="mb-5" style={{fontWeight: 'bold'}}>HOW IT WORKS</h2>
 					<Col xs={12} md={3} className="text-center mb-4">
 						<img src={image1} alt="Step 1" width="110" />
-						<p className="fs-5" style={{ marginTop: '30px' }}>1. Upload the video you want yo edit</p>
+						<p className="fs-5" style={{ marginTop: '30px' }}>1. Upload the video you want to edit</p>
 					</Col>
 					<Col xs={12} md={3} className="text-center mb-4">
 						<img src={image2} alt="Step 2" width="110" />
@@ -283,7 +283,7 @@ function Landing() {
 																videoUrlData?.output_url
 															}
 															download
-															className="mt-5"
+															className="mt-5 bold-button"
 															>
 															Download
 														</Button>
