@@ -162,12 +162,12 @@ function Landing() {
 					</Col>
 				</Row>
 
-				<Row>
+				<Row id="uploadRow">
 					<p className="fs-1 d-flex justify-content-center align-items-center" style={{ marginBottom: '40px', fontWeight: 'bold' }}>
 						Remove Your Video Background
 					</p>
 				</Row>
-				<Row id="uploadRow">
+				<Row>
 					<p className="fs-3" style={{ marginBottom: '40px' }}>
 						Upload a video from your files
 					</p>
@@ -221,24 +221,9 @@ function Landing() {
 											</Form.Control.Feedback>
 										</Form.Group>
 
-										{/* <Form.Group className="mb-3" controlId="videoUrl">
-											<Form.Control
-												{...register("videoUrl")}
-												type="text"
-												placeholder="Video url"
-												isInvalid={errors.videoUrl?.message}
-												isValid={
-													!Object.hasOwn(errors, "videoUrl") &&
-													videoUrl !== null
-												}
-											/>
-											<Form.Control.Feedback type="invalid">
-												{errors.videoUrl?.message}
-											</Form.Control.Feedback>
-										</Form.Group>
-										<div className="d-grid gap-2 my-3 ">
-											<Button type="submit" variant="light">
-												{"Delete background"}
+										<div className="d-grid gap-2 my-3">
+											<Button type="submit" className="button-custom">
+												<span className="bold-text">Delete background</span>
 											</Button>
 										</div>
 									</Form>
@@ -292,15 +277,15 @@ function Landing() {
 													)}
 													{(videoFileData?.output_url || videoUrlData?.output_url) && (
 														<Button
-														variant="primary"
-														href={
-															videoFileData?.output_url ||
-															videoUrlData?.output_url
-														}
-														download
-														className="mt-5"
-														>
-														Descargar !
+															variant="primary"
+															href={
+																videoFileData?.output_url ||
+																videoUrlData?.output_url
+															}
+															download
+															className="mt-5"
+															>
+															Download
 														</Button>
 													)}
 												</Col>
