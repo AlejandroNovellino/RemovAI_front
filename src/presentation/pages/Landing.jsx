@@ -30,7 +30,6 @@ import image2 from "./../images/click.png";
 import image3 from "./../images/magic.png";
 import image4 from "./../images/download.png";
 
-
 //
 squircle.register();
 
@@ -55,7 +54,7 @@ function Landing() {
 			data: videoFileData,
 			isLoading: isLoadingVideoFile,
 			isError: isErrorVideoFile,
-			isSuccess: isSuccessVideoFile,
+			//isSuccess: isSuccessVideoFile,
 		},
 	] = useDeleteBackgroundFromFileMutation();
 	// from url
@@ -123,56 +122,97 @@ function Landing() {
 				<Row>
 					<div className="d-flex justify-content-center align-items-center mb-3">
 						<div className="col-md-6">
-						<div className="ms-5">
-							<h1 className="mb-4" style={{ fontFamily: 'Arial, sans-serif', fontWeight: 'bold', color: '#C39A06', fontSize: '65px' }}>
-								Video Background Remover
-							</h1>
-							<h5 style={{ paddingRight: '55px'}}>Easily swap out your video's background with just one click, converting it into a green screen so you can edit your video with any background you desire!</h5>
-							<button
-								onClick={() => { document.getElementById('uploadRow').scrollIntoView({ behavior: 'smooth' }) }}
-								className="btn btn-primary btn-custom"
-							>
-								Get started with your video
-							</button>
-						</div>
+							<div className="ms-5">
+								<h1
+									className="mb-4"
+									style={{
+										fontFamily: "Arial, sans-serif",
+										fontWeight: "bold",
+										color: "#C39A06",
+										fontSize: "65px",
+									}}>
+									Video Background Remover
+								</h1>
+								<h5 style={{ paddingRight: "55px" }}>
+									Easily swap out your video's background with just one click,
+									converting it into a green screen so you can edit your video
+									with any background you desire!
+								</h5>
+								<button
+									onClick={() => {
+										document
+											.getElementById("uploadRow")
+											.scrollIntoView({ behavior: "smooth" });
+									}}
+									className="btn btn-primary btn-custom">
+									Get started with your video
+								</button>
+							</div>
 						</div>
 						<div className="col-md-6 d-flex justify-content-center">
-							<img src={imagebg} width="90%" height="auto" className="image-shadow-custom" />
+							<img
+								src={imagebg}
+								width="90%"
+								height="auto"
+								className="image-shadow-custom"
+								alt="Description of algorithm"
+							/>
 						</div>
 					</div>
 				</Row>
 
-				<Row className="align-items-center" style={{ padding: '80px', backgroundColor: '#2A2A2A', marginTop: '60px', marginBottom: '60px'}}>
-					<h2 className="mb-5" style={{fontWeight: 'bold'}}>HOW IT WORKS</h2>
+				<Row
+					className="align-items-center"
+					style={{
+						padding: "80px",
+						backgroundColor: "#2A2A2A",
+						marginTop: "60px",
+						marginBottom: "60px",
+					}}>
+					<h2 className="mb-5" style={{ fontWeight: "bold" }}>
+						HOW IT WORKS
+					</h2>
 					<Col xs={12} md={3} className="text-center mb-4">
 						<img src={image1} alt="Step 1" width="110" />
-						<p className="fs-5" style={{ marginTop: '30px' }}>1. Upload the video you want to edit</p>
+						<p className="fs-5" style={{ marginTop: "30px" }}>
+							1. Upload the video you want to edit
+						</p>
 					</Col>
 					<Col xs={12} md={3} className="text-center mb-4">
 						<img src={image2} alt="Step 2" width="110" />
-						<p className="fs-5" style={{ marginTop: '30px' }}>2. Click on "Delete background"</p>
+						<p className="fs-5" style={{ marginTop: "30px" }}>
+							2. Click on "Delete background"
+						</p>
 					</Col>
 					<Col xs={12} md={3} className="text-center mb-4">
 						<img src={image3} alt="Step 3" width="110" />
-						<p className="fs-5" style={{ marginTop: '30px' }}>3. Wait for the magic to happen</p>
+						<p className="fs-5" style={{ marginTop: "30px" }}>
+							3. Wait for the magic to happen
+						</p>
 					</Col>
 					<Col xs={12} md={3} className="text-center mb-4">
 						<img src={image4} alt="Step 4" width="110" />
-						<p className="fs-5" style={{ marginTop: '30px' }}>4. Download your background removed video</p>
+						<p className="fs-5" style={{ marginTop: "30px" }}>
+							4. Download your background removed video
+						</p>
 					</Col>
 				</Row>
 
 				<Row id="uploadRow">
-					<p className="fs-1 d-flex justify-content-center align-items-center" style={{ marginBottom: '40px', fontWeight: 'bold' }}>
+					<p
+						className="fs-1 d-flex justify-content-center align-items-center"
+						style={{ marginBottom: "40px", fontWeight: "bold" }}>
 						Remove Your Video Background
 					</p>
 				</Row>
 				<Row>
-					<p className="fs-3" style={{ marginBottom: '40px' }}>
+					<p className="fs-3" style={{ marginBottom: "40px" }}>
 						Upload a video from your files
 					</p>
 				</Row>
-				<Row className="justify-content-md-center" style={{ marginBottom: '90px' }}>
+				<Row
+					className="justify-content-md-center"
+					style={{ marginBottom: "90px" }}>
 					<Col xs={6}>
 						<Card className="card-custom tw-backdrop-blur-sm card-shadow-custom">
 							<Card.Body>
@@ -180,26 +220,27 @@ function Landing() {
 									Your uploaded video
 								</Card.Title>
 								<Container className="mb-3 rounded-5">
-									{(videoFile || videoUrl) && 
+									{(videoFile || videoUrl) &&
+										videoFile[0] &&
 										(videoFile[0].type === "image/gif" ? (
-										<img
-											src={URL.createObjectURL(videoFile[0])}
-											alt="GIF"
-											className="rounded"
-											style={{ width: "100%", height: "100%" }}
-										/>
+											<img
+												src={URL.createObjectURL(videoFile[0])}
+												alt="GIF"
+												className="rounded"
+												style={{ width: "100%", height: "100%" }}
+											/>
 										) : (
-										<ReactPlayer
-											className="rounded"
-											width="100%"
-											height="100%"
-											controls={true}
-											loop={true}
-											url={
-											videoUrl ||
-											(videoFile && URL.createObjectURL(videoFile[0]))
-											}
-										/>
+											<ReactPlayer
+												className="rounded"
+												width="100%"
+												height="100%"
+												controls={true}
+												loop={true}
+												url={
+													videoUrl ||
+													(videoFile && URL.createObjectURL(videoFile[0]))
+												}
+											/>
 										))}
 								</Container>
 								<Container>
@@ -257,36 +298,38 @@ function Landing() {
 												<Col xs={12}>
 													{videoFileData?.output_url?.endsWith(".gif") ? (
 														<img
-														src={videoFileData?.output_url}
-														alt="GIF"
-														className="rounded"
-														style={{ width: "100%", height: "100%" }}
+															src={videoFileData?.output_url}
+															alt="GIF"
+															className="rounded"
+															style={{ width: "100%", height: "100%" }}
 														/>
 													) : (
-													<ReactPlayer
-														className="rounded"
-														width="100%"
-														height="100%"
-														controls={true}
-														loop={true}
-														url={
-															videoFileData?.output_url ||
-															videoUrlData?.output_url
-														}
-													/>
-													)}
-													{(videoFileData?.output_url || videoUrlData?.output_url) && (
-														<Button
-															variant="primary"
-															href={
+														<ReactPlayer
+															className="rounded"
+															width="100%"
+															height="100%"
+															controls={true}
+															loop={true}
+															url={
 																videoFileData?.output_url ||
 																videoUrlData?.output_url
 															}
-															download
-															className="mt-5 bold-button"
-															>
-															Download
-														</Button>
+														/>
+													)}
+													{(videoFileData?.output_url ||
+														videoUrlData?.output_url) && (
+														<div className="d-grid gap-2 my-3">
+															<Button
+																variant="primary"
+																href={
+																	videoFileData?.output_url ||
+																	videoUrlData?.output_url
+																}
+																download
+																className="mt-5 bold-button">
+																Download
+															</Button>
+														</div>
 													)}
 												</Col>
 											)}
