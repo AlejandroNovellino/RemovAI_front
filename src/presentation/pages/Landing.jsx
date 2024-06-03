@@ -28,6 +28,7 @@ import imagebg from "./../images/man-no-bg.png";
 import image1 from "./../images/file.png";
 import image2 from "./../images/click.png";
 import image3 from "./../images/magic.png";
+import image4 from "./../images/download.png";
 
 
 //
@@ -142,18 +143,22 @@ function Landing() {
 				</Row>
 
 				<Row className="align-items-center" style={{ padding: '80px', backgroundColor: '#2A2A2A', marginTop: '60px', marginBottom: '60px'}}>
-					<h2 className="mb-5">HOW IT WORKS</h2>
-					<Col xs={12} md={4} className="text-center mb-4">
+					<h2 className="mb-5" style={{fontWeight: 'bold'}}>HOW IT WORKS</h2>
+					<Col xs={12} md={3} className="text-center mb-4">
 						<img src={image1} alt="Step 1" width="110" />
-						<p className="fs-5" style={{ marginTop: '30px' }}>1. Upload a video or paste an URL</p>
+						<p className="fs-5" style={{ marginTop: '30px' }}>1. Upload the video you want yo edit</p>
 					</Col>
-					<Col xs={12} md={4} className="text-center mb-4">
+					<Col xs={12} md={3} className="text-center mb-4">
 						<img src={image2} alt="Step 2" width="110" />
 						<p className="fs-5" style={{ marginTop: '30px' }}>2. Click on "Delete background"</p>
 					</Col>
-					<Col xs={12} md={4} className="text-center mb-4">
+					<Col xs={12} md={3} className="text-center mb-4">
 						<img src={image3} alt="Step 3" width="110" />
 						<p className="fs-5" style={{ marginTop: '30px' }}>3. Wait for the magic to happen</p>
+					</Col>
+					<Col xs={12} md={3} className="text-center mb-4">
+						<img src={image4} alt="Step 4" width="110" />
+						<p className="fs-5" style={{ marginTop: '30px' }}>4. Download your background removed video</p>
 					</Col>
 				</Row>
 
@@ -162,12 +167,12 @@ function Landing() {
 						Remove Your Video Background
 					</p>
 				</Row>
-				<Row>
+				<Row id="uploadRow">
 					<p className="fs-3" style={{ marginBottom: '40px' }}>
-						Upload a video or paste an URL
+						Upload a video from your files
 					</p>
 				</Row>
-				<Row id="uploadRow" className="justify-content-md-center" style={{ marginBottom: '90px' }}>
+				<Row className="justify-content-md-center" style={{ marginBottom: '90px' }}>
 					<Col xs={6}>
 						<Card className="card-custom tw-backdrop-blur-sm card-shadow-custom">
 							<Card.Body>
